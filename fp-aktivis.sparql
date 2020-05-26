@@ -4,33 +4,18 @@ PREFIX dbo: <http://dbpedia.org/ontology/>
 PREFIX dbpropi: <http://id.dbpedia.org/property/>
 
 SELECT DISTINCT
-#   ?a
     STR(?nama) AS ?nama
     IF(?namaPartai = ?namaPartai,
         STR(?namaPartai),
         REPLACE(REPLACE(STR(?partai_), "_", " "), "http://id.dbpedia.org/resource/", "")) AS ?partai
     REPLACE(REPLACE(?namaKotaLahir, "Kabupaten ", ""), "Kota ", "") AS ?kota_lahir
     REPLACE(REPLACE(?namaKota, "Kabupaten ", ""), "Kota ", "") AS ?kota_terkait
-##    STR(?namaKotaLahir) as ?kota_lahir
-##    STR(?namaKota) as ?kota_terkait
-#    IF(?kotaLahir = ?kotaLahir, 
-#        REPLACE(REPLACE(?namaKotaLahir, "Kabupaten ", ""), "Kota ", ""),
-#        REPLACE(REPLACE(?namaKota, "Kabupaten ", ""), "Kota ", "")) AS ?asal
-#    ?kota
-#   ?kotaAdmin
-#  STR(?kotaLahir) != ""
-#  STR(?partai) != ""
-#  STR(?kotaLahir) = STR(?kotaLahir)
-#  REPLACE(REPLACE(?kota, "Kabupaten ", ""), "Kota ", "") = REPLACE(REPLACE(?kotaLahir, "Kabupaten ", ""), "Kota ", "")
-#    REPLACE(REPLACE(?namaKota, "Kabupaten ", ""), "Kota ", "") AS ?kota
-#    REPLACE(REPLACE(?namaKotaLahir, "Kabupaten ", ""), "Kota ", "") AS ?kotaLahir
 WHERE {
     ?a ?b dbrik:Aktivis_Indonesia;
        rdfs:label ?nama.
     
     OPTIONAL { 
         ?a dbo:birthPlace ?kotaLahir.
-#        ?d dbpropi:kota ?kotaLahir.
         FILTER NOT EXISTS { ?kotaLahir a dbo:Province }
         FILTER(!CONTAINS(STR(?kotaLahir), "Indonesia"))
         FILTER(!CONTAINS(STR(?kotaLahir), "Hindia_Belanda"))
@@ -47,18 +32,6 @@ WHERE {
         ?kota rdfs:label ?namaKota.
         ?c dbpropi:kota ?kota.
         FILTER NOT EXISTS { ?kota a dbo:Province }
-    
-#        FILTER( (CONTAINS( STR(?kota), "Kota") #&& STRSTARTS( STR(?namaKota), "Kota")) 
-#            || CONTAINS( STR(?kota), "Kabupaten")) #&& STRSTARTS( STR(?namaKota), "Kabupaten")))
-#          && !CONTAINS(STR(?kota), "Tokoh")).
     }
-#    FILTER( 
-#        IF(STR(?kotaLahir) = STR(?kotaLahir), 
- #          (REPLACE(REPLACE(?namaKota, "Kabupaten ", ""), "Kota ", "") = REPLACE(REPLACE(?namaKotaLahir, "Kabupaten ", ""), "Kota ", "")
-  #            || STR(?kota) != STR(?kota)),
-   #         1
-    #    )
-    #)
-#    FILTER(STR(?kota) != "" || STR(?partai) != "" || STR(?kotaLahir) != "")
 }
 LIMIT 200
